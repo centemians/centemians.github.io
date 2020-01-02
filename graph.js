@@ -14,7 +14,7 @@ const PRIMARY_COLOR = 'blue';
 // This is the color of array bars that are being compared throughout the animations.
 const SECONDARY_COLOR = 'red';
 
-const ANIMATION_SPEED_MS = 50;
+const ANIMATION_SPEED_MS = 2;
 
 const graph = svg.append('g')
     .attr('width', graphWidth)
@@ -96,7 +96,7 @@ function mergeAlgo(){
 //Reset Array function
 function resetArray() {
     const data = [];
-    for (let i = 0; i < 50 ; i++) {
+    for (let i = 0; i < 500 ; i++) {
       data.push(randomIntFromInterval(5,750));
     }
     return data;
