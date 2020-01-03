@@ -8,9 +8,19 @@
 <body>
     <div class="canvas">
     </div>
+
+    Size of Array (between 5 and 500):
+    <input id="array_size" type="number" name="quantity" value="100" min="5" max="500">
+
+    Speed(ms):
+    <input id="speed" type="number" name="speed" value="1" min="1" max="500">
+    
+
     <button id="myBtn" onclick="generateArray()">Generate New Array</button>
     <button id="merge_sort" onclick="mergeAlgo()">Merge Sort</button>
+    <button id="bubble_sort" onclick="bubbleAlgo()">Bubble Sort</button>
     <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="sortingAlgorithm.js"></script>
     <script src="graph.js"></script>
 </body>
 </html>

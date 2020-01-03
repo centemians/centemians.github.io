@@ -14,7 +14,8 @@ const PRIMARY_COLOR = 'blue';
 // This is the color of array bars that are being compared throughout the animations.
 const SECONDARY_COLOR = 'red';
 
-const ANIMATION_SPEED_MS = 2;
+//let ANIMATION_SPEED_MS = document.getElementById('speed').value;
+console.log(document.getElementById('speed').value);
 
 const graph = svg.append('g')
     .attr('width', graphWidth)
@@ -34,8 +35,11 @@ const update = (data) => {
         .paddingOuter(0.2);
 
     const rects = graph.selectAll('rect')
-        .data(data)
-    
+        .data(data);
+
+    rects.enter().remove();
+    rects.exit().remove();
+
     rects.attr('width',x.bandwidth)
         .attr('class','array-bar')
         .attr('id',(d,i) => "bar" + i)
@@ -58,7 +62,7 @@ const update = (data) => {
 }
 
 function mergeAlgo(){
-
+  const ANIMATION_SPEED_MS = document.getElementById('speed').value;
   const y = d3.scaleLinear()
     .domain([0,750])
     .range([graphHeight,0]);
@@ -83,20 +87,75 @@ function mergeAlgo(){
         },i*ANIMATION_SPEED_MS);
       }
       else{
+        //console.log(i);
         d3.timeout(function(){
           const [barOneIdx, newHeight] = animations[i];
           const barOne = d3.select("#bar"+barOneIdx);
           barOne.transition().duration(ANIMATION_SPEED_MS)
             .attr('height',graphHeight - y(newHeight))
-            .attr('y', y(newHeight));
+            .attr('y', y(newHeight))
+            .attr('fill',PRIMARY_COLOR);
         },i*ANIMATION_SPEED_MS);
       }
     }
+    const rects = d3.selectAll('rect');
+    d3.timeout(function(){
+      rects.transition().duration(5 * ANIMATION_SPEED_MS)
+        .attr('fill','green');
+    },animations.length * ANIMATION_SPEED_MS);
 }
+
+function bubbleAlgo(){
+  const ANIMATION_SPEED_MS = document.getElementById('speed').value;
+  const y = d3.scaleLinear()
+    .domain([0,750])
+    .range([graphHeight,0]);
+
+    const animations = getBubbleSortAnimations(array);
+    console.log(animations);
+    console.log(array);
+    for (let i = 0; i < animations.length; i++) {
+      //const arrayBars = document.getElementsByClassName('array-bar');
+      const isColorChange = i % 4 < 2;
+      if (isColorChange) {
+        const [barOneIdx, barTwoIdx] = animations[i];
+        const barOne = d3.select("#bar"+barOneIdx);
+        const barTwo = d3.select("#bar"+barTwoIdx);
+        //console.log(barOne);
+        const color = i % 4 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+        d3.timeout(function() {
+          barOne.transition().duration(ANIMATION_SPEED_MS)
+          .attr('fill',color);
+        barTwo.transition().duration(ANIMATION_SPEED_MS)
+          .attr('fill',color);
+        },i*ANIMATION_SPEED_MS);
+      }
+      else{
+        d3.timeout(function(){
+          const [barOneIdx, newHeight] = animations[i];
+          const barOne = d3.select("#bar"+barOneIdx);
+          barOne.transition().duration(ANIMATION_SPEED_MS)
+            .attr('height',graphHeight - y(newHeight))
+            .attr('y', y(newHeight))
+            .attr('fill',PRIMARY_COLOR);
+        },i*ANIMATION_SPEED_MS);
+      }
+    }
+    const rects = d3.selectAll('rect');
+    d3.timeout(function(){
+      rects.transition().duration(5 * ANIMATION_SPEED_MS)
+        .attr('fill','green');
+    },animations.length * ANIMATION_SPEED_MS);
+}
+
 //Reset Array function
 function resetArray() {
     const data = [];
-    for (let i = 0; i < 500 ; i++) {
+    var size = document.getElementById("array_size").value;
+    //console.log(document.getElementsByName('quantity').value);
+    console.log(size);
+    //console.log(ANIMATION_SPEED_MS);
+    for (let i = 0; i < size ; i++) {
       data.push(randomIntFromInterval(5,750));
     }
     return data;
@@ -107,10 +166,6 @@ let array = [];
 function generateArray(){
     array = resetArray();
     update(array);
-    //console.log(array);
-    //const animations = getMergeSortAnimations(array);
-    //console.log(array);
-    //console.log(animations);
 }
 
 generateArray();
@@ -118,81 +173,3 @@ generateArray();
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-function getMergeSortAnimations(array) {
-    const animations = [];
-    if (array.length <= 1) return array;
-    const auxiliaryArray = array.slice();
-    mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
-    return animations;
-  }
-  
-  function mergeSortHelper(
-    mainArray,
-    startIdx,
-    endIdx,
-    auxiliaryArray,
-    animations,
-  ) {
-    if (startIdx === endIdx) return;
-    const middleIdx = Math.floor((startIdx + endIdx) / 2);
-    mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, animations);
-    mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, animations);
-    doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations);
-  }
-  
-  function doMerge(
-    mainArray,
-    startIdx,
-    middleIdx,
-    endIdx,
-    auxiliaryArray,
-    animations,
-  ) {
-    let k = startIdx;
-    let i = startIdx;
-    let j = middleIdx + 1;
-    while (i <= middleIdx && j <= endIdx) {
-      // These are the values that we're comparing; we push them once
-      // to change their color.
-      animations.push([i, j]);
-      // These are the values that we're comparing; we push them a second
-      // time to revert their color.
-      animations.push([i, j]);
-      if (auxiliaryArray[i] <= auxiliaryArray[j]) {
-        // We overwrite the value at index k in the original array with the
-        // value at index i in the auxiliary array.
-        animations.push([k, auxiliaryArray[i]]);
-        mainArray[k++] = auxiliaryArray[i++];
-      } else {
-        // We overwrite the value at index k in the original array with the
-        // value at index j in the auxiliary array.
-        animations.push([k, auxiliaryArray[j]]);
-        mainArray[k++] = auxiliaryArray[j++];
-      }
-    }
-    while (i <= middleIdx) {
-      // These are the values that we're comparing; we push them once
-      // to change their color.
-      animations.push([i, i]);
-      // These are the values that we're comparing; we push them a second
-      // time to revert their color.
-      animations.push([i, i]);
-      // We overwrite the value at index k in the original array with the
-      // value at index i in the auxiliary array.
-      animations.push([k, auxiliaryArray[i]]);
-      mainArray[k++] = auxiliaryArray[i++];
-    }
-    while (j <= endIdx) {
-      // These are the values that we're comparing; we push them once
-      // to change their color.
-      animations.push([j, j]);
-      // These are the values that we're comparing; we push them a second
-      // time to revert their color.
-      animations.push([j, j]);
-      // We overwrite the value at index k in the original array with the
-      // value at index j in the auxiliary array.
-      animations.push([k, auxiliaryArray[j]]);
-      mainArray[k++] = auxiliaryArray[j++];
-    }
-  }
