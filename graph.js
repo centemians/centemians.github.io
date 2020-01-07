@@ -148,6 +148,49 @@ function bubbleAlgo(){
     },animations.length * ANIMATION_SPEED_MS);
 }
 
+function quickAlgo(){
+  const ANIMATION_SPEED_MS = document.getElementById('speed').value;
+  const y = d3.scaleLinear()
+    .domain([0,750])
+    .range([graphHeight,0]);
+
+    const animations = getQuickSortAnimations(array);
+    console.log(animations);
+    console.log(array);
+    for (let i = 0; i < animations.length; i++) {
+      //const arrayBars = document.getElementsByClassName('array-bar');
+      const isColorChange = i % 4 < 2;
+      if (isColorChange) {
+        const [barOneIdx, barTwoIdx] = animations[i];
+        const barOne = d3.select("#bar"+barOneIdx);
+        const barTwo = d3.select("#bar"+barTwoIdx);
+        //console.log(barOne);
+        const color = i % 4 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+        d3.timeout(function() {
+          barOne.transition().duration(ANIMATION_SPEED_MS)
+          .attr('fill',color);
+        barTwo.transition().duration(ANIMATION_SPEED_MS)
+          .attr('fill',color);
+        },i*ANIMATION_SPEED_MS);
+      }
+      else{
+        d3.timeout(function(){
+          const [barOneIdx, newHeight] = animations[i];
+          const barOne = d3.select("#bar"+barOneIdx);
+          barOne.transition().duration(ANIMATION_SPEED_MS)
+            .attr('height',graphHeight - y(newHeight))
+            .attr('y', y(newHeight))
+            .attr('fill',PRIMARY_COLOR);
+        },i*ANIMATION_SPEED_MS);
+      }
+    }
+    const rects = d3.selectAll('rect');
+    d3.timeout(function(){
+      rects.transition().duration(5 * ANIMATION_SPEED_MS)
+        .attr('fill','green');
+    },animations.length * ANIMATION_SPEED_MS);
+}
+
 //Reset Array function
 function resetArray() {
     const data = [];
@@ -156,6 +199,7 @@ function resetArray() {
     console.log(size);
     //console.log(ANIMATION_SPEED_MS);
     for (let i = 0; i < size ; i++) {
+      //data.push(size-i);
       data.push(randomIntFromInterval(5,750));
     }
     return data;
