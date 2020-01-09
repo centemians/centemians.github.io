@@ -1,12 +1,12 @@
 //import {getMergeSortAnimations} from "sortingAlgorithm.js";
 const svg = d3.select('.canvas')
     .append('svg')
-        .attr('width',1400)
+        .attr('width',1100)
         .attr('height',600);
 
 //Create margins and dimensions
 const margin = {top:20, bottom:20, right:20, left:20};
-const graphWidth = 1400 - margin.left - margin.right;
+const graphWidth = 1100 - margin.left - margin.right;
 const graphHeight = 600 - margin.top - margin.bottom;
 
 const PRIMARY_COLOR = 'blue';
@@ -30,7 +30,7 @@ const update = (data) => {
     
     const x = d3.scaleBand()
         .domain(data.map((d,i) => i))
-        .range([0,1350])
+        .range([0,1050])
         .paddingInner(0.2)
         .paddingOuter(0.2);
 
@@ -98,11 +98,15 @@ function mergeAlgo(){
         },i*ANIMATION_SPEED_MS);
       }
     }
-    const rects = d3.selectAll('rect');
     d3.timeout(function(){
-      rects.transition().duration(5 * ANIMATION_SPEED_MS)
-        .attr('fill','green');
-    },animations.length * ANIMATION_SPEED_MS);
+      for(let i=0;i<array.length;i++){
+        d3.timeout(function(){
+          const barOne = d3.select("#bar"+i);
+          barOne.transition().duration(5)
+          .attr('fill','green');
+        },i*5);
+      }
+    },animations.length*ANIMATION_SPEED_MS);
 }
 
 function bubbleAlgo(){
@@ -141,11 +145,15 @@ function bubbleAlgo(){
         },i*ANIMATION_SPEED_MS);
       }
     }
-    const rects = d3.selectAll('rect');
     d3.timeout(function(){
-      rects.transition().duration(5 * ANIMATION_SPEED_MS)
-        .attr('fill','green');
-    },animations.length * ANIMATION_SPEED_MS);
+      for(let i=0;i<array.length;i++){
+        d3.timeout(function(){
+          const barOne = d3.select("#bar"+i);
+          barOne.transition().duration(5)
+          .attr('fill','green');
+        },i*5);
+      }
+    },animations.length*ANIMATION_SPEED_MS);
 }
 
 function quickAlgo(){
@@ -184,11 +192,64 @@ function quickAlgo(){
         },i*ANIMATION_SPEED_MS);
       }
     }
-    const rects = d3.selectAll('rect');
     d3.timeout(function(){
-      rects.transition().duration(5 * ANIMATION_SPEED_MS)
-        .attr('fill','green');
-    },animations.length * ANIMATION_SPEED_MS);
+      for(let i=0;i<array.length;i++){
+        d3.timeout(function(){
+          const barOne = d3.select("#bar"+i);
+          barOne.transition().duration(5)
+          .attr('fill','green');
+        },i*5);
+      }
+    },animations.length*ANIMATION_SPEED_MS);
+}
+
+function insertionAlgo(){
+  const ANIMATION_SPEED_MS = document.getElementById('speed').value;
+  const y = d3.scaleLinear()
+    .domain([0,750])
+    .range([graphHeight,0]);
+
+    const animations = getInsertionSortAnimations(array);
+    console.log(animations);
+    console.log(array);
+    let flag;
+    for (let i = 0; i < animations.length; i++) {
+      //const arrayBars = document.getElementsByClassName('array-bar');
+      const isColorChange = i % 3 !== 2;
+      if (isColorChange) {
+        const [barOneIdx, barTwoIdx] = animations[i];
+        const barOne = d3.select("#bar"+barOneIdx);
+        const barTwo = d3.select("#bar"+barTwoIdx);
+        //console.log(barOne);
+        const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+        d3.timeout(function() {
+          barOne.transition().duration(ANIMATION_SPEED_MS)
+          .attr('fill',color);
+        barTwo.transition().duration(ANIMATION_SPEED_MS)
+          .attr('fill',color);
+        },i*ANIMATION_SPEED_MS);
+      }
+      else{
+        d3.timeout(function(){
+          const [barOneIdx, newHeight] = animations[i];
+          const barOne = d3.select("#bar"+barOneIdx);
+          barOne.transition().duration(ANIMATION_SPEED_MS)
+            .attr('height',graphHeight - y(newHeight))
+            .attr('y', y(newHeight))
+            .attr('fill',PRIMARY_COLOR);
+        },i*ANIMATION_SPEED_MS);
+      }
+      flag = i;
+    }
+    d3.timeout(function(){
+      for(let i=0;i<array.length;i++){
+        d3.timeout(function(){
+          const barOne = d3.select("#bar"+i);
+          barOne.transition().duration(10)
+          .attr('fill','green');
+        },i*10);
+      }
+    },animations.length*ANIMATION_SPEED_MS);
 }
 
 //Reset Array function

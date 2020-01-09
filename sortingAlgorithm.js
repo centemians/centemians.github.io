@@ -179,3 +179,76 @@ function quickSort(mainArray,
 
     return k+1;
 }
+
+function getInsertionSortAnimations(array){
+    const animations = new Array();
+    if(array.length < 1) return array;
+
+    const auxiliaryArray = array.slice();
+
+    for(let i=1;i<auxiliaryArray.length;i++){
+        let key = auxiliaryArray[i];
+
+        let j = i - 1;
+        while(j >= 0 && auxiliaryArray[j] > key){
+            animations.push([j,j+1]);
+            animations.push([j,j+1]);
+            auxiliaryArray[j+1] = auxiliaryArray[j];
+            animations.push([j+1,auxiliaryArray[j+1]]);
+            j --;
+        }
+        animations.push([j+1,j+1]);
+        animations.push([j+1,j+1]);
+        auxiliaryArray[j+1] = key;
+        animations.push([j+1,auxiliaryArray[j+1]]);
+    }
+
+    console.log(auxiliaryArray);
+    return animations;
+}
+
+function getHeapSortAnimations(array){
+    const animations = new Array();
+    if(array.length < 1) return array;
+    const auxiliaryArray = array.slice();
+    console.log(auxiliaryArray);
+    heapSortHelper(auxiliaryArray,animations);
+
+    console.log(auxiliaryArray);
+    return animations;
+}
+
+function heapify(auxiliaryArray,i,animations){
+    let largest = i;
+    let l = 2*i + 1;
+    let r = 2*i + 2;
+
+    if(l < auxiliaryArray.length && auxiliaryArray[l] > auxiliaryArray[largest])
+        largest = l;
+
+    if(r < auxiliaryArray.length && auxiliaryArray[r] > auxiliaryArray[largest])
+        largest = r;
+    
+    if(largest!=i){
+        let temp = auxiliaryArray[i];
+        auxiliaryArray[i] = auxiliaryArray[largest];
+        auxiliaryArray[largest] = temp;
+
+        heapify(auxiliaryArray,largest,animations);
+    }
+}
+
+function heapSortHelper(auxiliaryArray,animations){
+    //Build Heap
+    //Math.floor((startIdx + endIdx) / 2)
+    for(let i = Math.floor(auxiliaryArray.length/2) - 1; i>=0; i--)
+        heapify(auxiliaryArray,i,animations);
+
+    for(let i=auxiliaryArray.length-1;i>=0;i--){
+        let temp = auxiliaryArray[i];
+        auxiliaryArray[i] = auxiliaryArray[0];
+        auxiliaryArray[0] = temp;
+
+        heapify(auxiliaryArray,0,animations);
+    }
+}
