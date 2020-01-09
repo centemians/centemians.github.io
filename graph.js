@@ -2,12 +2,12 @@
 const svg = d3.select('.canvas')
     .append('svg')
         .attr('width',1100)
-        .attr('height',600);
+        .attr('height',500);
 
 //Create margins and dimensions
 const margin = {top:20, bottom:20, right:20, left:20};
 const graphWidth = 1100 - margin.left - margin.right;
-const graphHeight = 600 - margin.top - margin.bottom;
+const graphHeight = 500 - margin.top - margin.bottom;
 
 const PRIMARY_COLOR = 'blue';
 
