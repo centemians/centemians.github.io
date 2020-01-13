@@ -9,10 +9,10 @@ const margin = {top:20, bottom:20, right:20, left:20};
 const graphWidth = 1100 - margin.left - margin.right;
 const graphHeight = 500 - margin.top - margin.bottom;
 
-const PRIMARY_COLOR = 'blue';
+const PRIMARY_COLOR = 'yellow';
 
 // This is the color of array bars that are being compared throughout the animations.
-const SECONDARY_COLOR = 'red';
+const SECONDARY_COLOR = 'black';
 
 //let ANIMATION_SPEED_MS = document.getElementById('speed').value;
 console.log(document.getElementById('speed').value);
@@ -44,7 +44,7 @@ const update = (data) => {
         .attr('class','array-bar')
         .attr('id',(d,i) => "bar" + i)
         .attr('height', (d,i) => graphHeight - y(d))
-        .attr('fill', 'blue')
+        .attr('fill', 'yellow')
         .attr('x', (d,i) => x(i))
         .attr('y', (d,i) => y(d));
 
@@ -55,7 +55,7 @@ const update = (data) => {
             .attr('id',(d,i) => "bar" + i)
             .attr('width',x.bandwidth)
             .attr('height', (d,i) => graphHeight - y(d))
-            .attr('fill', 'blue')
+            .attr('fill', 'yellow')
             .attr('x', (d,i) => x(i))
             .attr('y', (d,i) => y(d));
     
@@ -103,7 +103,7 @@ function mergeAlgo(){
         d3.timeout(function(){
           const barOne = d3.select("#bar"+i);
           barOne.transition().duration(5)
-          .attr('fill','green');
+          .attr('fill','white');
         },i*5);
       }
     },animations.length*ANIMATION_SPEED_MS);
@@ -150,7 +150,7 @@ function bubbleAlgo(){
         d3.timeout(function(){
           const barOne = d3.select("#bar"+i);
           barOne.transition().duration(5)
-          .attr('fill','green');
+          .attr('fill','white');
         },i*5);
       }
     },animations.length*ANIMATION_SPEED_MS);
@@ -197,7 +197,7 @@ function quickAlgo(){
         d3.timeout(function(){
           const barOne = d3.select("#bar"+i);
           barOne.transition().duration(5)
-          .attr('fill','green');
+          .attr('fill','white');
         },i*5);
       }
     },animations.length*ANIMATION_SPEED_MS);
@@ -246,7 +246,7 @@ function insertionAlgo(){
         d3.timeout(function(){
           const barOne = d3.select("#bar"+i);
           barOne.transition().duration(10)
-          .attr('fill','green');
+          .attr('fill','white');
         },i*10);
       }
     },animations.length*ANIMATION_SPEED_MS);
