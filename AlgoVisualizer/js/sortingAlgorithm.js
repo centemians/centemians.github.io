@@ -4,8 +4,8 @@ function getMergeSortAnimations(array) {
     //const auxiliaryArray = array.slice();
     let auxiliaryArray = array.slice();
     mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
-    console.log(animations);
-    console.log(auxiliaryArray);
+    //console.log(animations);
+    //console.log(auxiliaryArray);
     return animations;
 }
   
@@ -128,8 +128,8 @@ function getQuickSortAnimations(array){
     if(array.length <= 1) return array;
     const auxiliaryArray = array.slice();
     quickSortHelper(array,0,array.length-1,auxiliaryArray,animations);
-    console.log(animations);
-    console.log(auxiliaryArray);
+    //console.log(animations);
+    //console.log(auxiliaryArray);
     return animations;
 }
 
@@ -203,7 +203,7 @@ function getInsertionSortAnimations(array){
         animations.push([j+1,auxiliaryArray[j+1]]);
     }
 
-    console.log(auxiliaryArray);
+    //console.log(auxiliaryArray);
     return animations;
 }
 
@@ -211,10 +211,10 @@ function getHeapSortAnimations(array){
     const animations = new Array();
     if(array.length < 1) return array;
     const auxiliaryArray = array.slice();
-    console.log(auxiliaryArray);
+    //console.log(auxiliaryArray);
     heapSortHelper(auxiliaryArray,animations);
 
-    console.log(auxiliaryArray);
+    //console.log(auxiliaryArray);
     return animations;
 }
 
